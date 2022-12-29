@@ -17,6 +17,6 @@ public class MongoReactiveApplication
 
     @Override
     protected String getDatabaseName() {
-        return "reactive";
+        return "test";
     }
 }
