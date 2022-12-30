@@ -5,10 +5,13 @@ import co.com.bancolombia.mongo.dto.CustomerDTO;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
 public interface MongoReactiveRepository
         extends ReactiveMongoRepository<CustomerDTO, String> {
-    Mono<Customer> findByClientDocument(String clientDocument);
+    @Query("{clientDocument:'?0'}")
+    Mono<CustomerDTO> findByClientDocument(String clientDocument);
+
 }

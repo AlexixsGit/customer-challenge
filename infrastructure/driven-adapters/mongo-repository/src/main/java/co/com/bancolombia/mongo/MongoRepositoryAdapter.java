@@ -7,10 +7,12 @@ import co.com.bancolombia.mongo.helper.AdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
-public class MongoRepositoryAdapter extends AdapterOperations<Customer, CustomerDTO, String, MongoReactiveRepository> implements CustomerRepository {
+public class MongoRepositoryAdapter extends AdapterOperations<Customer, CustomerDTO, String, MongoReactiveRepository>
+        implements CustomerRepository {
 
     public MongoRepositoryAdapter(MongoReactiveRepository repository, ObjectMapper mapper) {
         /**
@@ -24,14 +26,22 @@ public class MongoRepositoryAdapter extends AdapterOperations<Customer, Customer
     @Override
     public Mono<Customer> findOneCustomer(String clientDocument) {
         return super.repository.findByClientDocument(clientDocument)
-                .doOnNext(e->{
-                    System.out.println(e);
-                })
-                .flatMap(customerDTO -> {
-                    final Customer customer = Customer.builder().accountNumber(customerDTO.getAccountNumber()).build();
-                    return Mono.just(customer);
-                });
-
+                .flatMap(customerDTO -> Mono.just(Customer.builder()
+                        .header(customerDTO.getHeader())
+                        .accountType(customerDTO.getAccountType())
+                        .accountNumber(customerDTO.getAccountNumber())
+                        .email(customerDTO.getEmail())
+                        .detailCustomerInformation(customerDTO.getDetailCustomer())
+                        .clientDocumentType(customerDTO.getClientDocumentType())
+                        .clientDocument(customerDTO.getClientDocument())
+                        .businessDocumentType(customerDTO.getBusinessDocumentType())
+                        .businessDocument(customerDTO.getBusinessDocument())
+                        .clientIp(customerDTO.getClientIp())
+                        .channelId(customerDTO.getChannelId())
+                        .consumerId(customerDTO.getConsumerId())
+                        .userAgent(customerDTO.getUserAgent())
+                        .device(customerDTO.getDevice())
+                        .authenticationInfo(customerDTO.getAuthenticationInfo()).build()));
 
     }
 }

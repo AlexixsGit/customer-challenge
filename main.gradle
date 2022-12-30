@@ -27,6 +27,7 @@ subprojects {
         testAnnotationProcessor  "org.projectlombok:lombok:${lombokVersion}"
         implementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
         implementation "org.springframework:spring-context:${springContextVersion}"
+        compileOnly 'org.mongodb:bson:4.3.4'
     }
 
     test.finalizedBy(project.tasks.jacocoTestReport)
